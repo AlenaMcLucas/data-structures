@@ -1,0 +1,63 @@
+## Dynamic Arrays and Amortized Analysis ##
+
+# Dynamic Arrays #
+
+- static arrays don't change size, must determine size at compile time
+- semi-solution is dynamically-allocated array where size is decided at runtime
+- solution is dynamic arrays, aka resizable arrays, where store a pointer to a dynamically-allocated array and replace it with a newly-allocated array as needed
+
+Dynamic Arrays have the following operations at minimum:
+- Get(i)          returns element at i
+- Set(i, val)     set element i to val
+- PushBack(val)   adds val to end
+- Remove(i)       removes element at i
+- Size()          number of elements
+
+Storing:
+- arr: dynamically-allocated array
+- capacity: size of the dynamically-allocated array
+- size: number of elements currently in array
+
+- can be expensive because you must copy old array at capacity to new array that is twice the capacity to make room for new elements
+- Python has a list, only kind of array, no static arrays in Python (only dynamic)
+- some space is wasted when there are places for elements that are not filled and the array is large
+
+Runtimes
+- Get(i)          O(1)
+- Set(i, val)     O(1)
+- PushBack(val)   O(n) worst-case if it has to create a new array
+- Remove(i)       O(n)
+- Size()          O(1)
+
+# Amortized Analysis: Aggregate Method #
+
+- amoritized cost: given a sequence of n operations, the amoritized cost is (Cost(n operations))/n
+- monthly cost of a car example
+- average cost of each call to PushBack, in this case the amortized cost is O(1)
+
+# Amortized Analysis: Banker's Method #
+
+- charge extra for each cheap operation, save extra charge as tokens in your data sctructure (conceptually), use the tokens to pay for expensive operations
+- in PushBack case, charge 3 for each insertion, use 1 for cost of insertion and 2 as tokens
+- when resize is needed, cash in all tokens to create array
+- when resize is not needed, keep building up more tokens until array is full and every element has a token, one coin goes on the newly-inserted element and one coin (capacity/2) elements prior
+
+# Amortized Analysis: Physicist's Method #
+
+- define a potential function, theta, which maps states of the data structure to integers
+- theta(hsub0) = 0   note hsub0 is time 0
+- theta(hsub0) >= 0   so it's never negative
+- amortized cost for operation t = csubt + theta(hsubt) - theta(hsubt-1)
+- choose theta so that if csubt is small, the potential increases, and if csubt is large, the potential decreases by the same scale
+- the sum of the amortized costs is theta(hsubn) - theta(hsub0) + summation of costs, which is >= the summation of costs (lower bound)
+- looking at n calls to PushBack, let theta(h) = 2 * size - capacity
+- theta(hsub0) = 2 * 0 - 0 = 0
+- theta(hsubi) = 2 * size - capacity > 0 (since size > capcity/2)
+- when not resizing, the cost of adding an element is 3 when simplified
+- when resizing, the cost of adding an element is 2 when simplified
+
+# Amortized Analysis: Summary #
+- cannot use constant time instead of multiplying capacity by 2 because we don't have enough time to accumulate work, would more resemble O(n) than O(1)
+- none of this changes the code, this is all for runtime analysis
+
+

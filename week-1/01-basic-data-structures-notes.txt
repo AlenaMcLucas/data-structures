@@ -1,0 +1,143 @@
+## Arrays and Linked Lists ##
+
+# Note #
+- O(1) is constant time
+- O(n) is linear time
+
+# Arrays #
+
+- array - continguous area of memory (sequence) consisting of equal-size elements indexed by contiguous integers
+- arrays are special because we have constant-time access to array's elements
+- also constant time to add or remove elements at the end
+- linear time to add or remove elements at arbitrary location
+- element address = [array address] + [element size] * ([element index] - [first index])
+- multi-dimensional array element address = [array address] + [element size] * ([element row index] - [first index]) * [number of columns] + ([element column index] - [first index])
+- row-major is when the array is listed based on rows, the first index changes most rapidly, i.e. (1,1), (1,2), (1,3), (2,1), (2,2), (2,3); column-major is when the array is listed numerically based on columns, the last index changes most rapidly, i.e. (1,1), (2,1), (3,1), (1,2), (2,2), (3,2)
+
+- times for common operations:
+
+          | add   remove
+-------------------------
+beginning | O(n)   O(n)
+end       | O(1)   O(1)
+middle    | O(n)   O(n)
+
+
+# Singly-Linked Lists #
+
+- The head is a pointer that points to a node, which contains a key/value and another pointer (two elements), until there is a node with a key but without another pointer (a null pointer).
+
+List API:
+- PushFront(Key)         add to front           O(1)
+- Key TopFront()         return front item      O(1)
+- PopFront()             remove front item      O(1)
+- PushBack(Key)          add to back            O(n)   O(1)
+- Key TopBack()          return back item       O(n)   O(1)
+- PopBack()              remove back item       O(n)
+- BooleanFind(Key)       is key in list?        O(n)
+- Erase(Key)             remove key from list   O(n)
+- Boolean Empty()        empty list?            O(1)
+- AddBefore(Node, Key)   adds key before node   O(n)
+- AddAfter(Node, Key)    adds key after node    O(1)
+
+- PushFront - when calling this function, a new node is created with the new key, then the pointer at the head is updated to instead point from the new node to the old first node, then the head adds a new pointer to point to the new node; O(1)
+- TopFront - O(1)
+- PopFront - update the head pointer to point to the old second node, then remove the node; O(1)
+- PushBack - go from front all the way to the end, then add the node there; O(n)
+- TopBack - same logic as above; O(n)
+- Note that if we have a tail, then the two operations above are O(1)
+- PopBack - same logic as TopBack; O(n); note that if there is a tail it doesn't affect O because a new pointer has to be created from the tail to the last node
+
+# Doubly-Linked Lists #
+
+- each node has a pointer that points forward and a pointer that points backward
+- PopBack() and AddBefore() become O(1)
+
+Arrays
+- Random access, so O(1) to access any element
+- O(n) to insert/remove from front
+- contiguous
+
+Linked Lists
+- O(n) to access most elements
+- O(1) to insert/remove from the front, and if has a tail then also O(1) to insert/remove from end of the list
+- not contiguous
+- when doubly linked list, O(1) to insert/remove most nodes
+
+
+## Stacks and Queues ##
+
+# Stacks #
+
+A stack is an abstract data type with the following operations (stack of books comparison):
+- Push(Key)         adds key to collection
+- Key Top()         returns most recently added key
+- Key Pop()         removes and returns most recently added key
+- Boolean Empty()   are there any elements?
+
+- bracket balanced example
+- limitation of array is we have a maximum size based on initialization, potentially may overallocate space
+- linked list there is no size limit, but have overhead of storing a pointer as well
+- each stack operation is O(1)
+- stacks also known as LIFO (Last In First Out) queues
+
+# Queues #
+
+A queue is an abstract data type with the following operations (waiting in line comparison):
+- Enqueue(Key)      adds key to collection
+- Key Dequeue()     removes and returns least recently added key
+- Boolean Empty()   are there any elements?
+
+- FIFO (First In First Out)
+
+- linked list works as one would think
+- array there must be a read and write node that points to where the queue starts and ends, respectively; they only point to the same node if the array is empty, so if write moves all the way around the array it cannot fill the last value
+- each queue operation is O(1)
+
+# Trees #
+
+- can be used for sentence structure, math operations, geography, animal classification, code, etc
+- demonstrate hierarchy
+- binary search tree has at most two children at each node, and the root node's value is greater than or equal to all nodes in the left child and less than nodes in the right child
+
+A tree is:
+- empty, or
+- a node with a key, and/or a list of child trees
+
+- parent/child, ancestor/descendant relationships
+- siblings
+- a leaf is a node with no children
+- interior node is a non-leaf, do have children
+- the root is the top node/parent of the tree
+- level is: root is level 1, then level 2, and so on
+- height is maximum depth of subtree node and farthest leaf
+- size is number of nodes
+- forest is a collection of trees
+- trees can calculate Height(tree), Size(tree)
+
+# Tree Traversal #
+
+Depth-first means completely traverse sub-tree before exploring a sibling sub-tree:
+- InOrderTraversal(tree): left child, node, right child
+- PreOrderTraversal(tree): node, children
+- PostOrderTraversal(tree): children, node
+- tree traversal acts like a stack
+
+Breadth-first means traverse all siblings progressing to the next level:
+- LevelTraversal(tree)
+- tree traversal acts like a queue
+
+- when working with trees, recursive algorithms are common especially with depth-first
+
+
+
+
+
+
+
+
+
+
+
+
+
