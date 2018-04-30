@@ -1,0 +1,137 @@
+
+## Priority Queues: Introduction ##
+
+- uses standard queue data structure (PushBack, PopFront)
+- priority queue is generalization of queue where each element is assigned a priority and elements come out in order by priority, not important how elements are stored and storage can be random
+- when new job arrives, able to insert it; get highest priority job to keep handling jobs
+- priority queue is an abstract data type supporting these operations:
+  - Insert(p) adds a new element with priority p
+  - Extract Max() extracts an element with maximum priority
+
+- additional operations:
+  - Remove(it) removes an element pointed by an iterator it
+  - GetMax() returns an element with maximum priority without changing set of elements
+  - ChangePriority(it, p) changes the priority of an element pointed by it to p
+
+- algorithms that use priority queues: dijsktra's algorithm, prim's algorithm, huffmam's algorithm, and heap sort
+
+
+# Naive Implementations #
+
+- in an unsorted array/list, inserting an new element is easy O(1) but extracting max is not O(n)
+- in a sorted array, extract max is easy O(1) but inserting a new element is not O(n)
+- in a sorted list, extract max is easy O(1) but inserting a new element is not O(n)
+
+## Priority Queues: Heaps ##
+
+# Binary Heaps/Trees #
+
+- binary max-heap is binary tree (each none has zero, one or two children) where the value of each node is at least the values of its children
+
+# Tree Height Remark #
+
+- new definition of tree height: number of edges on the longest path from the root to the leaf
+
+# Basic Operations #
+
+- GetMax is stored at root of tree O(1)
+- Insert must be attached to tree, cannot be attached to root so must be attached to leaf, must not violate the heap property so if it does then we SiftUp/swap the elements, O(tree height)
+- ExtractMax means replace the root with any leaf, when heap property is violated then must SiftDown with the largest child until heap property is satisfied, O(tree height)
+- ChangePriority is changing priority (value) of a node and let changed element sift up or down depending on whether its priority decreased or increased until heap property is satisfied, O(tree height)
+- Remove element from tree, change priority to infinity, let it sift up and then ExtractMax, delete infinity, then sift down, O(tree height)
+- want trees to be shallow
+
+# Complete Binary Trees #
+
+- binary tree is complete is all levels are filled except possibly the last one which is filled from left to right
+- complete binary tree with n nodes has height at most O(log n)
+- can store as an array and compute things about node i:
+  - parent(i) = [i/2] (round down)   [(i-1)/2]
+  - leftchild(i) = 2*i                2*i+1
+  - rightchild(i) = 2*i+1             2*i+2
+                                  ^0-based arrays^
+- need to keep the tree complete to maintain these advantage
+- SiftUp and SiftDown do not change the shape of the tree, but Insert and ExtractMax do
+- if need to Insert a node, do so in the left-most vacant position in the last level and SiftUp if needed
+- if need to ExtractMax, replace the root with the last leaf and let it SiftDown
+
+# Pseudocode #
+
+- maxSize is maximum number of elements in the heap (i value of last node)
+- size is size of heap (number of nodes), always at most maxSize (value of last node)
+- pseudocode examples of all basic operations for binary heaps
+- complete binay tree is stored implicity in an array because we can compute indexes on the fly so space efficient, and all operations work in O(log n) except GetMax O(1), and easy to implement
+
+## Priority Queues: Heap Sort ##
+
+# Heap Sort #
+
+- to HeapSort, must create an empty priority queue, then Insert all elements from array into priority queue, then ExtractMax until sorted, O(n log n)
+- BuildHeap from array, for every subtree, SiftUp until satisfied, move up levels until reach the root, better way to HeapSort in place, O(n log n)
+- partial sorting to find k largest element in array/heap, which can be solved in O(n)
+
+# Final Remarks #
+
+- binary min-heap is binary tree where value of each node is at most the values of its children, implementation is similar
+- d-ary heap nodes on all levels except for possible the last one and have exactly d children
+- height of d-ary tree is about logd(n), running time of SiftUp is O(logd(n)), running time of SiftDown is O(d*logd(n))
+
+## Disjoint Sets: Naive Implementations ##
+
+# Overview #
+
+- disjoint-set data scripture supports the following operations:
+  - MakeSet(x) creates a singleton set {x}
+  - Find(x) returns ID of the set containing x:
+    - if x and y lie in the same set, then Find(x) = Find(y), otherwise Find(x) != Find(y)
+  - Union(x,y) merges two sets if they contain x and y (if their ids are equal)
+- maze example
+- Preprocess(maze)
+  - for each cell c in maze, MakeSet(c)
+  - for each cell c in maze, for each neighbor that actually connects two cells, Union(c,n)  //This is how we keep track of what is reachable
+- IsReachable(maze):
+  - return Find(A) = Find(B)
+- similar to building networks of computers
+
+# Naive Implementations #
+
+- use smallest element of set as its ID, store set in array where array[i] stores smallest element in set i belongs to
+- MakeSet(i) and Find(i) run in O(1), Union(i,j) runs n O(n) because must scan whole array
+- linked list will allow for more efficient merging because can just update a pointer to perform Union O(1) only if we can get the tail of list of x and head of list of y in constant time, instead of merging to create a list, can also point tail at other tail and creates a tree for very efficient implementation
+- use the list tail as ID of set, Find is O(n) though because will need to traverse list and gets slower with longer list
+
+## Disjoint Sets: Efficient Implementation ##
+
+# Trees for Disjoint Sets #
+
+- represent each set as a rooted tree
+- ID of a set is the root of the tree
+- use array parent[1...n]: parent[i] is the parent or i or i if it is the root
+- same setups as previous where index to be read "1 (index) points to 6 (value)"
+- MakeSet(i) is O(1)
+- Find(i) is O(tree height)
+- Union(i,j) can just change pointer, makes sense to hang a shorter one from root of longer one since we want to keep trees shallow (union by rank heuristic)
+
+# Union by Rank #
+
+- to quickly find height of tree, need to keep height of each subtree in an array rank[1...n]: rank[i] is height of the subtree whose root is i
+- when MakeSet(i), set rank[i] = 0
+- Find(i) doesn't change
+- Union(i) has to compare ranks to decide which set to hang, when two heights are equal doesn't matter and will increase height so must increase rank[i]
+- height of any tree in the forest is at most log2(n)
+- any tree of height k in the forest has at least 2^k nodes
+- union by rank heuristic guarantees that Union and Find work in O(log n)
+
+# Path Compression #
+
+- use information when run Find on all elements on path to root to achieve path compression; take all elements on this path with their children and point them to the root as well, decreasing tree height
+- to implement, recursively call Find when the parent is not the root and set them equal to parent[i]
+- iterated logarithm of n, log*(n) which is at most 5, is the number of times the logarithm function needs to be applied to n before the result is less than or equal to 1
+- amortized time of a single operation is O(log*n), nearly constant
+
+# Analysis/Summary #
+
+- represent each set as a rooted tree
+- use root of the set as its ID
+- must abide by union by rank heuristic and path compression heuristic
+- this results in an amortized running time O(log*n)
